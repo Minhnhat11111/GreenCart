@@ -37,7 +37,7 @@ export const placeOrderStripe = async (req, res) => {
         const userId = req.userId;
         const { items, address } = req.body;
 
-        const origin = req.headers.origin || "https://localhost:4000";
+        const origin = req.headers.origin || "https://localhost:4000" || 'https://green-cart-dusky-five.vercel.app';
 
         if (!address || !items || items.length === 0) {
             return res.json({ success: false, message: "Dữ liệu không hợp lệ." });
