@@ -89,14 +89,18 @@ const Navbar = () => {
             <img 
               src={user?.avatar || assets.profile_icon} 
               alt='Profile' 
-              className='w-8 h-8 rounded-full object-cover cursor-pointer border border-gray-300'
+              className='w-10 h-10 rounded-full object-cover cursor-pointer border border-gray-300'
               onClick={() => setShowDropdown(!showDropdown)}
+              onError={(e) => {
+                e.target.src = assets.profile_icon
+              }}
             />
             {showDropdown && (
-              <ul className='absolute top-10 right-0 bg-white shadow-lg border border-gray-200 py-2.5 w-32 rounded-md text-sm z-40'>
-                <li onClick={() => {navigate("/profile"); setShowDropdown(false)}} className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>{t('profile')}</li>
-                <li onClick={() => {navigate("/my-orders"); setShowDropdown(false)}} className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>{t('orders')}</li>
-                <li onClick={() => {logout(); setShowDropdown(false)}} className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>{t('logout')}</li>
+              <ul className='absolute top-12 right-0 bg-white shadow-lg border border-gray-200 py-2.5 w-36 rounded-md text-sm z-40'>
+                <li onClick={() => {navigate("/profile"); setShowDropdown(false)}} className='p-2 pl-4 hover:bg-primary/10 cursor-pointer'>{t('profile')}</li>
+                <li onClick={() => {navigate("/my-orders"); setShowDropdown(false)}} className='p-2 pl-4 hover:bg-primary/10 cursor-pointer'>{t('orders')}</li>
+                <li onClick={() => {navigate("/settings"); setShowDropdown(false)}} className='p-2 pl-4 hover:bg-primary/10 cursor-pointer'>{t('settings')}</li>
+                <li onClick={() => {logout(); setShowDropdown(false)}} className='p-2 pl-4 hover:bg-primary/10 cursor-pointer'>{t('logout')}</li>
               </ul>
             )}
           </div>
