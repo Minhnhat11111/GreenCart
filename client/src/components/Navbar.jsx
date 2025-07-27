@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { assets } from '../assets/assets.js'
 import { useAppContext } from '../context/AppContext.jsx'
+import { useSettings } from '../context/SettingsContext.jsx'
 import toast from 'react-hot-toast'
 
 const Navbar = () => {
   const [open, setOpen] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
   const { user, setUser, setShowUserLogin, navigate, setSearchQuery, searchQuery, getCartCount, axios } = useAppContext();
+  const { t } = useSettings();
 
   const logout = async () => {
     try {
@@ -30,8 +32,22 @@ const Navbar = () => {
     }
   }, [searchQuery])
 
+  // tắt dropdown khi click ra ngoài
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showDropdown && !event.target.closest('.dropdown-container')) {
+        setShowDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showDropdown])
+
   return (
-    <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-6 border-b border-gray-300 bg-white relative transition-all">
+    <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
 
       {/* Logo */}
       <NavLink to="/" onClick={() => setOpen(false)}>
@@ -40,16 +56,16 @@ const Navbar = () => {
 
       {/* Desktop Menu */}
       <div className="hidden sm:flex items-center gap-10">
-        <NavLink to="/" className="text-lg font-medium hover:text-primary transition">Trang chủ</NavLink>
-        <NavLink to="/products" className="text-lg font-medium hover:text-primary transition">Sản phẩm</NavLink>
-        <NavLink to="/contact" className="text-lg font-medium hover:text-primary transition">Liên hệ</NavLink>
+        <NavLink to="/" className="text-lg font-medium hover:text-primary transition">{t('home')}</NavLink>
+        <NavLink to="/products" className="text-lg font-medium hover:text-primary transition">{t('products')}</NavLink>
+        <NavLink to="/contact" className="text-lg font-medium hover:text-primary transition">{t('contact')}</NavLink>
 
         <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-4 py-2 rounded-full">
           <input
             onChange={(e) => setSearchQuery(e.target.value)}
             className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
             type="text"
-            placeholder="Search products"
+            placeholder={t('searchPlaceholder')}
           />
           <img src={assets.search_icon} alt="search" className="w-5 h-5" />
         </div>
@@ -66,24 +82,21 @@ const Navbar = () => {
             onClick={() => setShowUserLogin(true)}
             className="px-10 py-3 bg-primary hover:bg-primary-dull transition text-white rounded-full text-lg font-medium"
           >
-            Đăng nhập
+            {t('login')}
           </button>
         ) : (
           <div className='relative dropdown-container'>
             <img 
               src={user?.avatar || assets.profile_icon} 
               alt='Profile' 
-              className='w-10 h-10 rounded-full object-cover cursor-pointer border border-gray-300'
+              className='w-8 h-8 rounded-full object-cover cursor-pointer border border-gray-300'
               onClick={() => setShowDropdown(!showDropdown)}
-              onError={(e) => {
-                e.target.src = assets.profile_icon
-              }}
             />
             {showDropdown && (
-              <ul className='absolute top-12 right-0 bg-white shadow-lg border border-gray-200 py-2.5 w-36 rounded-md text-sm z-40'>
-                <li onClick={() => {navigate("/profile"); setShowDropdown(false)}} className='p-2 pl-4 hover:bg-primary/10 cursor-pointer'>Hồ sơ</li>
-                <li onClick={() => {navigate("/my-orders"); setShowDropdown(false)}} className='p-2 pl-4 hover:bg-primary/10 cursor-pointer'>Đơn hàng</li>
-                <li onClick={() => {logout(); setShowDropdown(false)}} className='p-2 pl-4 hover:bg-primary/10 cursor-pointer'>Đăng xuất</li>
+              <ul className='absolute top-10 right-0 bg-white shadow-lg border border-gray-200 py-2.5 w-32 rounded-md text-sm z-40'>
+                <li onClick={() => {navigate("/profile"); setShowDropdown(false)}} className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>{t('profile')}</li>
+                <li onClick={() => {navigate("/my-orders"); setShowDropdown(false)}} className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>{t('orders')}</li>
+                <li onClick={() => {logout(); setShowDropdown(false)}} className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>{t('logout')}</li>
               </ul>
             )}
           </div>
@@ -98,15 +111,16 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {open && (
         <div className="sm:hidden absolute top-[80px] left-0 w-full bg-white shadow-md py-6 flex flex-col items-start gap-3 px-6 text-base z-50">
-          <NavLink to="/" onClick={() => setOpen(false)}>Trang chủ</NavLink>
-          <NavLink to="/products" onClick={() => setOpen(false)}>Sản phẩm</NavLink>
+          <NavLink to="/" onClick={() => setOpen(false)}>{t('home')}</NavLink>
+          <NavLink to="/products" onClick={() => setOpen(false)}>{t('products')}</NavLink>
           {user && (
             <>
-              <NavLink to="/profile" onClick={() => setOpen(false)}>Hồ sơ</NavLink>
-              <NavLink to="/my-orders" onClick={() => setOpen(false)}>Đơn hàng</NavLink>
+              <NavLink to="/profile" onClick={() => setOpen(false)}>{t('profile')}</NavLink>
+              <NavLink to="/my-orders" onClick={() => setOpen(false)}>{t('orders')}</NavLink>
+              <NavLink to="/settings" onClick={() => setOpen(false)}>{t('settings')}</NavLink>
             </>
           )}
-          <NavLink to="/contact" onClick={() => setOpen(false)}>Liên hệ</NavLink>
+          <NavLink to="/contact" onClick={() => setOpen(false)}>{t('contact')}</NavLink>
           {!user ? (
             <button
               onClick={() => {
@@ -115,14 +129,14 @@ const Navbar = () => {
               }}
               className="px-8 py-3 mt-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-base"
             >
-             Đăng nhập
+             {t('login')}
             </button>
           ) : (
             <button
               onClick={logout}
               className="px-8 py-3 mt-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-base"
             >
-              Đăng xuất
+              {t('logout')}
             </button>
           )}
         </div>
