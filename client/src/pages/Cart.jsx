@@ -114,6 +114,27 @@ const Cart = () => {
         toast.success('Đã hủy mã giảm giá');
     };
 
+    const deleteAddress = async (addressId) => {
+        try {
+            const { data } = await axios.delete(`/api/address/delete/${addressId}`);
+            if (data.success) {
+                toast.success(data.message);
+                // Cập nhật lại danh sách địa chỉ
+                const updatedAddresses = addresses.filter(addr => addr._id !== addressId);
+                setAddresses(updatedAddresses);
+                
+                // Nếu địa chỉ đang được chọn bị xóa, chọn địa chỉ đầu tiên còn lại
+                if (selectedAddress && selectedAddress._id === addressId) {
+                    setselectedAddress(updatedAddresses.length > 0 ? updatedAddresses[0] : null);
+                }
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error('Có lỗi xảy ra khi xóa địa chỉ');
+        }
+    };
+
     useEffect(() => {
         if (products.length > 0 && cartItems) {
             getCart() 
@@ -191,37 +212,46 @@ const Cart = () => {
                 <hr className="border-gray-300 my-5" />
                 <div className="mb-6">
                     <p className="text-sm font-medium uppercase">Địa chỉ </p>
-<div className="relative flex justify-between items-start mt-2">
-  <p className="text-gray-500">
-    {selectedAddress
-      ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}`
-      : "No address found"}
-  </p>
-  <button onClick={() => setShowAddress(!showAddress)} className="text-primary hover:underline cursor-pointer">
-    Thay đổi
-  </button>
+                    <div className="relative flex justify-between items-start mt-2">
+                        <p className="text-gray-500">
+                            {selectedAddress
+                                ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}`
+                                : "No address found"}
+                        </p>
+                        <button onClick={() => setShowAddress(!showAddress)} className="text-primary hover:underline cursor-pointer">
+                            Thay đổi
+                        </button>
 
-  {showAddress && (
-    <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
-      {addresses.map((address, index) => (
-        <p
-          key={index}
-          onClick={() => {
-            setselectedAddress(address); // ✅ sửa đúng
-            setShowAddress(false);
-          }}
-          className="text-gray-500 p-2 hover:bg-gray-100"
-        >
-          {address.street}, {address.city}, {address.state}, {address.country}
-        </p>
-      ))}
-      <p onClick={() => navigate("/add-address")} className="text-primary text-center cursor-pointer p-2 hover:bg-primary/10">
-        Thêm địa chỉ
-      </p>
-    </div>
-  )}
-</div>
-
+                        {showAddress && (
+                            <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full z-50 shadow-lg">
+                                {addresses.map((address, index) => (
+                                    <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0">
+                                        <p
+                                            onClick={() => {
+                                                setselectedAddress(address);
+                                                setShowAddress(false);
+                                            }}
+                                            className="text-gray-500 cursor-pointer flex-1 pr-2"
+                                        >
+                                            {address.street}, {address.city}, {address.state}, {address.country}
+                                        </p>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteAddress(address._id);
+                                            }}
+                                            className="text-red-500 hover:text-red-700 text-xs px-2 py-1 rounded hover:bg-red-50 transition"
+                                        >
+                                            Xóa
+                                        </button>
+                                    </div>
+                                ))}
+                                <p onClick={() => navigate("/add-address")} className="text-primary text-center cursor-pointer p-2 hover:bg-primary/10">
+                                    Thêm địa chỉ
+                                </p>
+                            </div>
+                        )}
+                    </div>
 
                     <p className="text-sm font-medium uppercase mt-6">Phương thức thanh toán</p>
 

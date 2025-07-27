@@ -24,4 +24,23 @@ export const getAddress = async (req, res) => {
         console.log(error.message);
         res.json({ success: false, message: error.message });
     }
-} 
+}
+
+//xóa địa chỉ
+export const deleteAddress = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.userId;
+        
+        const address = await Address.findOneAndDelete({ _id: id, userId });
+        
+        if (!address) {
+            return res.json({ success: false, message: "Địa chỉ không tồn tại" });
+        }
+        
+        res.json({ success: true, message: "Xóa địa chỉ thành công" });
+    } catch (error) {
+        console.log(error.message);
+        res.json({ success: false, message: error.message });
+    }
+}
