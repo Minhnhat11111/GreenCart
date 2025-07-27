@@ -7,9 +7,10 @@ import NewsLetter from '../components/NewsLetter'
 import Footer from '../components/Footer'
 import ProductCard from '../components/ProductCard'
 import { useAppContext } from '../context/AppContext'
+import { categories } from '../assets/assets'
 
 const Home = () => {
-  const { products } = useAppContext();
+  const { products, navigate } = useAppContext();
   const [filteredProducts, setFilteredProducts] = useState([])
   const [sortBy, setSortBy] = useState('default')
   
@@ -35,11 +36,54 @@ const Home = () => {
     setFilteredProducts(productsCopy);
   }, [products, sortBy])
 
+  // Lấy sản phẩm theo danh mục
+  const getProductsByCategory = (categoryPath) => {
+    return products.filter(product => 
+      product.category.toLowerCase() === categoryPath.toLowerCase() && 
+      product.inStock
+    ).slice(0, 5);
+  }
+
   return (
-    <div className='mt-10 '>
+    <div className='mt-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto'>
       <MainBanner />
       <Categories />
      {/* <BestSeller /> */}
+      
+      {/* Sections theo danh mục */}
+      {categories.map((category, index) => {
+        const categoryProducts = getProductsByCategory(category.path);
+        
+        if (categoryProducts.length === 0) return null;
+        
+        return (
+          <div key={index} className='mt-16'>
+            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6'>
+              <div className='flex flex-col items-start sm:items-end w-max mb-4 sm:mb-0'>
+                <p className='text-2xl md:text-3xl font-medium'>{category.text}</p>
+                <div className='w-16 h-0.5 bg-primary rounded-full'></div>
+              </div>
+              
+              <button 
+                onClick={() => {
+                  navigate(`/product/${category.path.toLowerCase()}`);
+                  scrollTo(0, 0);
+                }}
+                className='text-primary font-medium hover:text-primary-dull transition flex items-center gap-2'
+              >
+                Xem thêm
+                <span>→</span>
+              </button>
+            </div>
+
+            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-5 mt-6'>
+              {categoryProducts.map((product, productIndex) => (
+                <ProductCard key={productIndex} product={product} />
+              ))}
+            </div>
+          </div>
+        );
+      })}
       
       {/* Section sản phẩm với thanh lọc */}
       <div className='mt-16'>
@@ -64,7 +108,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-6 lg:grid-cols-5 mt-6'>
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-5 mt-6'>
           {filteredProducts.slice(0, 10).map((product, index) => (
             <ProductCard key={index} product={product} />
           ))}
