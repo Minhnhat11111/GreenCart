@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
 
 const CouponList = () => {
-    const { axios } = useAppContext();
+    const { axios, formatCurrency } = useAppContext();
     const [coupons, setCoupons] = useState([]);
 
     const fetchCoupons = async () => {
@@ -42,8 +42,8 @@ const CouponList = () => {
                             <tr key={coupon._id}>
                                 <td className="border border-gray-300 p-2 font-mono">{coupon.code}</td>
                                 <td className="border border-gray-300 p-2">{coupon.discount}%</td>
-                                <td className="border border-gray-300 p-2">${coupon.minAmount}</td>
-                                <td className="border border-gray-300 p-2">${coupon.maxDiscount}</td>
+                                <td className="border border-gray-300 p-2">{formatCurrency(coupon.minAmount)}</td>
+                                <td className="border border-gray-300 p-2">{formatCurrency(coupon.maxDiscount)}</td>
                                 <td className="border border-gray-300 p-2">
                                     {new Date(coupon.expiryDate).toLocaleDateString()}
                                 </td>
