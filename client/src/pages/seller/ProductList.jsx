@@ -22,15 +22,15 @@ const ProductList = () => {
   return (
      <div className="no-scollbar flex-1 h-[95vg] overflow-y-scroll flex flex-col justify-between">
             <div className="w-full md:p-10 p-4">
-                <h2 className="pb-4 text-lg font-medium">All Products</h2>
+                <h2 className="pb-4 text-lg font-medium">Tất cả sản phẩm</h2>
                 <div className="flex flex-col items-center max-w-4xl w-full overflow-hidden rounded-md bg-white border border-gray-500/20">
                     <table className="md:table-auto table-fixed w-full overflow-hidden">
                         <thead className="text-gray-900 text-sm text-left">
                             <tr>
-                                <th className="px-4 py-3 font-semibold truncate">Product</th>
-                                <th className="px-4 py-3 font-semibold truncate">Category</th>
-                                <th className="px-4 py-3 font-semibold truncate hidden md:block">Selling Price</th>
-                                <th className="px-4 py-3 font-semibold truncate">In Stock</th>
+                                <th className="px-4 py-3 font-semibold truncate">Sản phẩm</th>
+                                <th className="px-4 py-3 font-semibold truncate">Danh mục</th>
+                                <th className="px-4 py-3 font-semibold truncate hidden md:block">Giá bán</th>
+                                <th className="px-4 py-3 font-semibold truncate">Hiển thị </th>
                             </tr>
                         </thead>
                         <tbody className="text-sm text-gray-500">

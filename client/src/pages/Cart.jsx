@@ -11,7 +11,10 @@ const Cart = () => {
     const [showAddress, setShowAddress] = useState(false)
     const [selectedAddress, setselectedAddress] = useState(null)
     const [paymentOption, setPaymenOption] = useState("COD")
-    
+    const [couponCode, setCouponCode] = useState('');
+    const [appliedCoupon, setAppliedCoupon] = useState(null);
+    const [discount, setDiscount] = useState(0);
+
     const getCart = () => {
         let tempArray = []
         for (const key in cartItems) {
@@ -41,33 +44,34 @@ const Cart = () => {
     const placeOrder = async () => {
         try {
             if (!selectedAddress) {
-                return toast.error("please select an address")
+                return toast.error("vui lòng chọn địa chỉ")
             }
+            
+            const orderData = {
+                userId: user._id,
+                items: cartArray.map(item => ({
+                    product: item._id,
+                    quantity: item.quantity
+                })),
+                address: selectedAddress._id,
+                couponCode: appliedCoupon?.code || null,
+                discount: discount || 0
+            };
+
             if (paymentOption === "COD") {
-                const { data } = await axios.post('/api/orders/cod', {
-                    userId: user._id,
-                    items: cartArray.map(item => ({
-                        product: item._id,
-                        quantity:item.quantity
-                    })),
-                    address: selectedAddress._id
-                })
+                const { data } = await axios.post('/api/orders/cod', orderData);
                 if (data.success) {
                     toast.success(data.message)
                     setCartItems({})
+                    setAppliedCoupon(null);
+                    setDiscount(0);
+                    setCouponCode('');
                     navigate('/my-orders')
                 } else {
                     toast.error(data.message)
                 }
             } else {
-                 const { data } = await axios.post('/api/orders/stripe', {
-                    userId: user._id,
-                    items: cartArray.map(item => ({
-                        product: item._id,
-                        quantity:item.quantity
-                    })),
-                    address: selectedAddress._id
-                })
+                const { data } = await axios.post('/api/orders/stripe', orderData);
                 if (data.success) {
                     window.location.replace(data.url)
                 } else {
@@ -79,6 +83,36 @@ const Cart = () => {
             toast.error(error.message)
         }
     }
+
+    const applyCoupon = async () => {
+        if (!couponCode.trim()) {
+            return toast.error('Vui lòng nhập mã giảm giá');
+        }
+
+        try {
+            const { data } = await axios.post('/api/coupon/apply', {
+                code: couponCode,
+                amount: getCartAmount()
+            });
+
+            if (data.success) {
+                setAppliedCoupon(data.coupon);
+                setDiscount(data.discount);
+                toast.success(`Áp dụng mã thành công! Giảm $${data.discount}`);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error('Có lỗi xảy ra');
+        }
+    };
+
+    const removeCoupon = () => {
+        setAppliedCoupon(null);
+        setDiscount(0);
+        setCouponCode('');
+        toast.success('Đã hủy mã giảm giá');
+    };
 
     useEffect(() => {
         if (products.length > 0 && cartItems) {
@@ -96,15 +130,15 @@ const Cart = () => {
         <div className="flex flex-col md:flex-row mt-16">
             <div className='flex-1 max-w-4xl'>
                 <h1 className="text-3xl font-medium mb-6">
-                    Shopping Cart <span className="text-sm text-primary">{getCartCount()}
-                        Items
+                    Giỏ hàng của bạn <span className="text-sm text-primary">{getCartCount()}
+                        món hàng
                     </span>
                 </h1>
 
                 <div className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 text-base font-medium pb-3">
-                    <p className="text-left">Product Details</p>
-                    <p className="text-center">Subtotal</p>
-                    <p className="text-center">Action</p>
+                    <p className="text-left">Chi tiết sản phẩm</p>
+                    <p className="text-center">Giá tiền</p>
+                    <p className="text-center">Thao tác</p>
                 </div>
 
                 {cartArray.map((product, index) => (
@@ -118,14 +152,22 @@ const Cart = () => {
                             <div>
                                 <p className="hidden md:block font-semibold">{product.name}</p>
                                 <div className="font-normal text-gray-500/70">
-                                    <p>Weight: <span>{product.weight || "N/A"}</span></p>
+                                    <p>Trọng lượng: <span>{product.weight || "N/A"}</span></p>
                                     <div className='flex items-center'>
-                                        <p>Qty:</p>
-                                        <select onChange ={e => updateCartItem(product._id,Number(e.target.value)) } value = {cartItems[product._id]}   className='outline-none'>
-                                            {Array(cartItems[product._id] > 9 ? cartItems[product._id]:9).fill('').map((_, index) => (
-                                                <option key={index} value={index + 1}>{index + 1}</option>
-                                            ))}
-                                        </select>
+                                        <p>Số lượng:</p>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            max="99"
+                                            value={cartItems[product._id]}
+                                            onChange={(e) => {
+                                                const newQty = parseInt(e.target.value) || 1;
+                                                if (newQty >= 1 && newQty <= 99) {
+                                                    updateCartItem(product._id, newQty);
+                                                }
+                                            }}
+                                            className='outline-none border border-gray-300 rounded px-2 py-1 w-16 ml-2'
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -139,16 +181,16 @@ const Cart = () => {
 
                 <button onClick={() => { navigate("/products");scrollTo(0,0)}} className="group cursor-pointer flex items-center mt-8 gap-2 text-primary font-medium">
                     <img className="group-hover:-translate-x-1 transition" src={assets.arrow_right_icon_colored} alt="arrow" />
-                    Continue Shopping
+                    Tiếp tục mua sắm
                 </button>
 
             </div>
 
             <div className="max-w-[360px] w-full bg-gray-100/40 p-5 max-md:mt-16 border border-gray-300/70">
-                <h2 className="text-xl md:text-xl font-medium">Order Summary</h2>
+                <h2 className="text-xl md:text-xl font-medium">Đơn hàng</h2>
                 <hr className="border-gray-300 my-5" />
                 <div className="mb-6">
-                    <p className="text-sm font-medium uppercase">Delivery Address</p>
+                    <p className="text-sm font-medium uppercase">Địa chỉ </p>
 <div className="relative flex justify-between items-start mt-2">
   <p className="text-gray-500">
     {selectedAddress
@@ -156,7 +198,7 @@ const Cart = () => {
       : "No address found"}
   </p>
   <button onClick={() => setShowAddress(!showAddress)} className="text-primary hover:underline cursor-pointer">
-    Change
+    Thay đổi
   </button>
 
   {showAddress && (
@@ -174,35 +216,79 @@ const Cart = () => {
         </p>
       ))}
       <p onClick={() => navigate("/add-address")} className="text-primary text-center cursor-pointer p-2 hover:bg-primary/10">
-        Add address
+        Thêm địa chỉ
       </p>
     </div>
   )}
 </div>
 
 
-                    <p className="text-sm font-medium uppercase mt-6">Payment Method</p>
+                    <p className="text-sm font-medium uppercase mt-6">Phương thức thanh toán</p>
 
                     <select onChange={e => setPaymenOption(e.target.value)} className="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none">
-                        <option value="COD">Cash On Delivery</option>
-                        <option value="Online">Online Payment</option>
+                        <option value="COD">Thanh toán khi nhận hàng</option>
+                        <option value="Online">Chuyển khoản</option>
                     </select>
+                </div>
+
+                <hr className="border-gray-300" />
+
+                {/* Thêm phần mã giảm giá */}
+                <div className="mt-4 mb-4">
+                    <h3 className="text-sm font-medium uppercase mb-3">Mã giảm giá</h3>
+                    {!appliedCoupon ? (
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                value={couponCode}
+                                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                placeholder="Nhập mã giảm giá"
+                                className="flex-1 p-2 border border-gray-300 rounded text-sm"
+                            />
+                            <button
+                                onClick={applyCoupon}
+                                className="px-3 py-2 bg-primary text-white rounded hover:bg-primary-dull transition text-sm"
+                            >
+                                Áp dụng
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-between bg-green-50 p-3 rounded border">
+                            <div>
+                                <p className="font-medium text-green-800 text-sm">Mã: {appliedCoupon.code}</p>
+                                <p className="text-xs text-green-600">Giảm {appliedCoupon.discount}% (-{currency}{discount})</p>
+                            </div>
+                            <button
+                                onClick={removeCoupon}
+                                className="text-red-600 hover:text-red-800 transition text-sm"
+                            >
+                                Hủy
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <hr className="border-gray-300" />
 
                 <div className="text-gray-500 mt-4 space-y-2">
                     <p className="flex justify-between">
-                        <span>Price</span><span>{currency}{getCartAmount()}</span>
+                        <span>Giá</span><span>{currency}{getCartAmount()}</span>
                     </p>
                     <p className="flex justify-between">
-                        <span>Shipping Fee</span><span className="text-green-600">Free</span>
+                        <span>Phí giao hàng</span><span className="text-green-600">Miễn phí</span>
                     </p>
-                    <p className="flex justify-between">
-                        <span>Tax (2%)</span><span>{currency}{getCartAmount() *2/100}</span>
-                    </p>
+                    
+                    {/* <p className="flex justify-between">
+                        <span>Thuế (2%)</span><span>{currency}{getCartAmount() *2/100}</span>
+                    </p> */}
+
+                    {appliedCoupon && (
+                        <p className="flex justify-between text-green-600">
+                            <span>Giảm giá ({appliedCoupon.code})</span><span>-{currency}{discount}</span>
+                        </p>
+                    )}
                     <p className="flex justify-between text-lg font-medium mt-3">
-                        <span>Total Amount:</span><span>{currency}{getCartAmount () + getCartAmount() *2/100}</span>
+                        <span>Tổng tiền :</span><span>{currency}{getCartAmount()  - discount}</span>
                     </p>
                 </div>
 

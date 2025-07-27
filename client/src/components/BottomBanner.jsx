@@ -11,7 +11,7 @@ const BottomBanner = () => {
           md:justify-center pt-16 md:pt-0 md:pr-24'>
               <div>
                   <h1 className='text-2xl md:text-3xl font-semibold text-primary
-                  mb-6'>Why We Are the Best?</h1>
+                  mb-6'>Tại sao nên chọn chúng tôi?</h1>
           {features.map((feature,index) => (
             <div key={index} className='flex items-center gap-4 mt-2'>
               <img src={feature.icon} alt={feature.title} className='md:w-11 w-9' />

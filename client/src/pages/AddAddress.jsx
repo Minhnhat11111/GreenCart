@@ -65,35 +65,35 @@ const AddAddress = () => {
   return (
     <div className='mt-16 pb-16 '>
           <p className='text-2xl md:text-3xl text-gray-500'>
-              Add Shipping
+              
               <span className='font-semibold text-primary'>
-                  Address
+                  Thêm địa chỉ
               </span></p>
           <div className='flex flex-col-reverse md:flex-row justify-between mt-10'>
               <div className='flex-1 max-w-md'>
                   <form onSubmit={onSubmitHandler} className='space-y-3 mt-6 text-sm'>
                       
                       <div className='grid grid-cols-2 gap-4'>
-                          <InputField handleChange={handleChange} address={address} name="firstName" type="text" placeholder="First Name" /> 
-                          <InputField handleChange={handleChange} address={address} name = "lastName" type="text" placeholder="Last Name" /> 
+                          <InputField handleChange={handleChange} address={address} name="firstName" type="text" placeholder="Họ" /> 
+                          <InputField handleChange={handleChange} address={address} name = "lastName" type="text" placeholder="Tên" /> 
                       </div>
-                      <InputField handleChange={handleChange} address={address} name="email" type="email" placeholder="Email address" />
+                      <InputField handleChange={handleChange} address={address} name="email" type="email" placeholder="Email" />
 
-                      <InputField handleChange={handleChange} address={address} name="street" type="text" placeholder="Street" />
-
-                      <div className='grid grid-cols-2 gap-4'> 
-                          <InputField handleChange={handleChange} address={address} name="city" type="text" placeholder="City" />
-                          <InputField handleChange={handleChange} address={address} name="state" type="text" placeholder="State" />
-                      </div>
+                      <InputField handleChange={handleChange} address={address} name="street" type="text" placeholder="Đường" />
 
                       <div className='grid grid-cols-2 gap-4'> 
-                          <InputField handleChange={handleChange} address={address} name="zipcode" type="number" placeholder="Zip code" />
-                          <InputField handleChange={handleChange} address={address} name="country" type="text" placeholder="Country" />
+                          <InputField handleChange={handleChange} address={address} name="city" type="text" placeholder="Thành phố" />
+                          <InputField handleChange={handleChange} address={address} name="state" type="text" placeholder="Phường" />
                       </div>
-                      <InputField handleChange={handleChange} address={address} name="phone" type="text" placeholder="Phone" />
+
+                      <div className='grid grid-cols-2 gap-4'> 
+                          <InputField handleChange={handleChange} address={address} name="zipcode" type="number" placeholder="Zip " />
+                          <InputField handleChange={handleChange} address={address} name="country" type="text" placeholder="Nước" />
+                      </div>
+                      <InputField handleChange={handleChange} address={address} name="phone" type="text" placeholder="Số điện thoại" />
 
                       <button className='w-full mt-6 bg-primary text-white py-3 hover:bg-primary-dull transition cursor-pointer uppercase'>
-                          Save address
+                          Lưu địa chỉ
                       </button>
 
                 </form>

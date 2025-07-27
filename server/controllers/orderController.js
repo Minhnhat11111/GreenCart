@@ -3,13 +3,14 @@ import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 import stripe from "stripe";
 import User from '../models/User.js'
-
+import axios from 'axios';
+import Coupon from '../models/Coupon.js';
 
 // place order cod api/order/cod
 export const placeOrderCOD = async (req, res) => {
     try {
         const userId = req.userId;
-        const { items, address } = req.body;
+        const { items, address, couponCode, discount } = req.body;
         if (!address || items.length === 0) {
             return res.json({success : false , message : "invalid data"})
         }
@@ -18,15 +19,31 @@ export const placeOrderCOD = async (req, res) => {
             return (await acc) + product.offerPrice * item.quantity;
         }, 0)
         amount += Math.floor(amount * 0.02);
-        await Order.create({
+        
+        // Trừ discount nếu có
+        if (discount && discount > 0) {
+            amount -= discount;
+        }
+
+        const order = await Order.create({
             userId,
             items,
             amount,
             address,
-            paymentType: "COD"
-        })
+            paymentType: "COD",
+            couponCode: couponCode || null,
+            discount: discount || 0
+        });
 
-        return res.json({success:true,message : " order placed success"})
+        // Cập nhật số lần sử dụng coupon trực tiếp
+        if (couponCode) {
+            await Coupon.findOneAndUpdate(
+                { code: couponCode.toUpperCase() },
+                { $inc: { usedCount: 1 } }
+            );
+        }
+
+        return res.json({success:true,message : " Đặt hàng thành công"})
     } catch (error) {
         return res.json({ success: false, message: error.message });
     }
@@ -35,7 +52,7 @@ export const placeOrderCOD = async (req, res) => {
 export const placeOrderStripe = async (req, res) => {
     try {
         const userId = req.userId;
-        const { items, address } = req.body;
+        const { items, address, couponCode, discount } = req.body;
 
         const origin = req.headers.origin || "https://localhost:4000" || 'https://green-cart-dusky-five.vercel.app';
 
@@ -63,6 +80,11 @@ export const placeOrderStripe = async (req, res) => {
 
         // Cộng thêm phí xử lý 2%
         amount += Math.floor(amount * 0.02);
+        
+        // Trừ discount nếu có
+        if (discount && discount > 0) {
+            amount -= discount;
+        }
 
         const order = await Order.create({
             userId,
@@ -70,6 +92,8 @@ export const placeOrderStripe = async (req, res) => {
             amount,
             address,
             paymentType: "Online",
+            couponCode: couponCode || null,
+            discount: discount || 0
         });
 
         const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
@@ -85,6 +109,7 @@ export const placeOrderStripe = async (req, res) => {
             quantity: item.quantity,
         }));
 
+        // Thêm discount vào metadata
         const session = await stripeInstance.checkout.sessions.create({
             line_items,
             mode: "payment",
@@ -93,6 +118,8 @@ export const placeOrderStripe = async (req, res) => {
             metadata: {
                 orderId: order._id.toString(),
                 userId,
+                couponCode: couponCode || '',
+                discount: discount || 0
             },
         });
 
@@ -162,7 +189,7 @@ export const getAllOrders = async (req, res) => {
     try {
         const order = await Order.find({
             $or: [{ paymentType: "COD" }, { isPaid: true }]
-        }).populate("items.Product address").sort({ createdAt: -1 });
+        }).populate("items.product address").sort({ createdAt: -1 });
         res.json({success:true , order})
     } catch (error) {
         res, json({ success: false, message: error.message });

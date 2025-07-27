@@ -131,14 +131,14 @@ export const AppContextProvider = ({ children }) => {
 
     const value = {
         navigate, user, setUser, isSeller, setIsSeller, showUserLogin, setShowUserLogin,
-        products, currency, addToCart, updateCartItem, removeFromCart, cartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount
-        ,axios,fetchProducts,setCartItems
+        products, currency, addToCart, updateCartItem, removeFromCart, cartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount,
+        axios, fetchProducts, setCartItems, fetchUser
     }
     return <AppContext.Provider value={value}>
         { children }
     </AppContext.Provider>
 }
-// eslint-disable-next-line react-refresh/only-export-components
+// 
 export const useAppContext = () => {
     return useContext(AppContext);
 }

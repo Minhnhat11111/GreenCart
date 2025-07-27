@@ -18,6 +18,9 @@ import ProductList from './pages/seller/ProductList.jsx'
 import Orders from './pages/seller/Orders.jsx'
 import AddProduct from './pages/seller/AddProduct.jsx'
 import Loading from './components/Loading.jsx'
+import Profile from './pages/Profile.jsx'
+import CreateCoupon from './pages/seller/CreateCoupon.jsx'
+import CouponList from './pages/seller/CouponList.jsx'
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes("seller");
@@ -41,7 +44,10 @@ const App = () => {
             <Route index element={isSeller ? <AddProduct /> : null} />
             <Route path='product-list' element={<ProductList />} />
             <Route path='orders' element={<Orders/>} />
+            <Route path='create-coupon' element={<CreateCoupon />} />
+            <Route path='coupon-list' element={<CouponList />} />
           </Route>
+          <Route path='/profile' element={<Profile />} />
         </Routes>
       </div>
        {!isSellerPath && <Footer/> }
@@ -50,3 +56,5 @@ const App = () => {
 }
 
 export default App
+
+

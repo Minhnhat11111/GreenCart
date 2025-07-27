@@ -7,7 +7,8 @@ const Footer = () => {
             <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-gray-500/30 text-gray-500">
                 <div>
                     <img className="w-34 md:w-32" src={assets.logo} alt="logo" />
-                    <p className="max-w-[410px] mt-6">We deliver fresh groceries and snacks straight to your door. Trusted by thousands, we aim to make your shopping experience simple and affordable.</p>
+                    <p className="max-w-[410px] mt-6">Chúng tôi giao thực phẩm tươi và đồ ăn vặt tận cửa nhà bạn. Được hàng ngàn người tin tưởng, chúng tôi hướng đến việc mang lại trải nghiệm mua sắm đơn giản và tiết kiệm cho bạn.
+</p>
                 </div>
                 <div className="flex flex-wrap justify-between w-full md:w-[45%] gap-5">
                     {footerLinks.map((section, index) => (
