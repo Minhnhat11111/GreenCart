@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 
 const Cart = () => {
-    const { products, currency, cartItems, removeFromCart, getCartCount, updateCartItem, navigate, getCartAmount, axios,user,setCartItems } = useAppContext();
+    const { products, currency, cartItems, removeFromCart, getCartCount, updateCartItem, navigate, getCartAmount, axios,user,setCartItems, formatCurrency } = useAppContext();
     const [cartArray, setCartArray] = useState([])
     const [addresses,setAddresses] = useState([])
     const [showAddress, setShowAddress] = useState(false)
@@ -193,7 +193,7 @@ const Cart = () => {
                                 </div>
                             </div>
                         </div>
-                        <p className="text-center">{ currency}{product.offerPrice * product.quantity}</p>
+                        <p className="text-center">{formatCurrency(product.offerPrice * product.quantity)}</p>
                         <button onClick={()=> removeFromCart(product._id)} className="cursor-pointer mx-auto">
                           <img src={assets.remove_icon} alt="remove"  className="inline-block w-6 h-6"/>
                         </button>
@@ -302,7 +302,7 @@ const Cart = () => {
 
                 <div className="text-gray-500 mt-4 space-y-2">
                     <p className="flex justify-between">
-                        <span>Giá</span><span>{getCartAmount()}{currency}</span>
+                        <span>Giá</span><span>{formatCurrency(getCartAmount())}</span>
                     </p>
                     <p className="flex justify-between">
                         <span>Phí giao hàng</span><span className="text-green-600">Miễn phí</span>
@@ -314,11 +314,11 @@ const Cart = () => {
 
                     {appliedCoupon && (
                         <p className="flex justify-between text-green-600">
-                            <span>Giảm giá ({appliedCoupon.code})</span><span>-{discount}{currency}</span>
+                            <span>Giảm giá ({appliedCoupon.code})</span><span>-{formatCurrency(discount)}</span>
                         </p>
                     )}
                     <p className="flex justify-between text-lg font-medium mt-3">
-                        <span>Tổng tiền :</span><span>{getCartAmount()  - discount} {currency}</span>
+                        <span>Tổng tiền :</span><span>{formatCurrency(getCartAmount() - discount)}</span>
                     </p>
                 </div>
 

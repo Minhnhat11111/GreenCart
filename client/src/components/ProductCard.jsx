@@ -4,8 +4,7 @@ import { useAppContext } from "../context/AppContext.jsx";
 
 const ProductCard = ({product}) => {
    
-    const {currency,addToCart,removeFromCart,cartItems,navigate} = useAppContext()
-
+    const {currency,addToCart,removeFromCart,cartItems,navigate, formatCurrency} = useAppContext()
 
     return product && (
         <div onClick={()=> {navigate(`/products/ ${product.category.toLowerCase()}/${product._id}`); scrollTo(0,0)}} className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full">
@@ -26,13 +25,12 @@ const ProductCard = ({product}) => {
                     ))}
                     <p>({product.reviewCount || 0})</p>
                 </div>
-                <div className="flex items-end justify-between mt-3">
-                    <p className="md:text-xl text-base font-medium text-primary">
+                <div className="flex items-end justify-between mt-3 ">
+                    <p className="md:text-base text-lg   font-bold text-primary">
 
-                        <span className="text-gray-500/60 md:text-sm text-xs line-through"> {product.price}{currency}</span>
-
+                        <span className="text-gray-500/60 md:text-sm text-xs line-through">{formatCurrency(product.price)}</span>
                          <br/>
-                        {product.offerPrice}{currency}{""} 
+                        {formatCurrency(product.offerPrice)}
                        
                                                
                     </p>

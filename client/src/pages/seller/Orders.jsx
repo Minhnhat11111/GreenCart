@@ -4,7 +4,7 @@ import { assets } from '../../assets/assets'
 import toast from 'react-hot-toast'
 
 const Orders = () => {
-    const { currency,axios } = useAppContext()
+    const { formatCurrency, axios } = useAppContext()
     const [orders, setOrders] = useState([])
     const fetchOrders = async () => {
         try {
@@ -35,7 +35,7 @@ const Orders = () => {
                   <span className="text-lg font-medium text-gray-800">Đơn hàng #{order._id.slice(-6)}</span>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl font-bold text-primary">{order.amount} {currency}</p>
+                  <p className="text-xl font-bold text-primary">{formatCurrency(order.amount)}</p>
                   <p className="text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</p>
                 </div>
               </div>

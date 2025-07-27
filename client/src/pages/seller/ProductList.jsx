@@ -3,7 +3,7 @@ import { useAppContext } from '../../context/AppContext'
 import toast from 'react-hot-toast';
 
 const ProductList = () => {
-    const { products, currency, axios, fetchProducts } = useAppContext(); 
+    const { products, currency, axios, fetchProducts, formatCurrency } = useAppContext(); 
     const [editingProduct, setEditingProduct] = useState(null);
     const [editForm, setEditForm] = useState({
         name: '',
@@ -141,7 +141,7 @@ const ProductList = () => {
                                                 className="w-full p-1 border border-gray-300 rounded text-sm"
                                             />
                                         ) : (
-                                            `${currency}${product.price}`
+                                            formatCurrency(product.price)
                                         )}
                                     </td>
                                     <td className="px-4 py-3 font-medium text-primary">
@@ -153,7 +153,7 @@ const ProductList = () => {
                                                 className="w-full p-1 border border-gray-300 rounded text-sm"
                                             />
                                         ) : (
-                                            `${currency}${product.offerPrice}`
+                                            formatCurrency(product.offerPrice)
                                         )}
                                     </td>
                                     <td className="px-4 py-3">

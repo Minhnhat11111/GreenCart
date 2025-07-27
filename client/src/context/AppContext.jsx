@@ -95,6 +95,13 @@ export const AppContextProvider = ({ children }) => {
         }
         return totalCount;
     }
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount);
+    };
+
     const getCartAmount = () => {
         let totalAmount = 0;
         for (const items in cartItems) {
@@ -132,7 +139,7 @@ export const AppContextProvider = ({ children }) => {
     const value = {
         navigate, user, setUser, isSeller, setIsSeller, showUserLogin, setShowUserLogin,
         products, currency, addToCart, updateCartItem, removeFromCart, cartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount,
-        axios, fetchProducts, setCartItems, fetchUser
+        axios, fetchProducts, setCartItems, fetchUser, formatCurrency
     }
     return <AppContext.Provider value={value}>
         { children }

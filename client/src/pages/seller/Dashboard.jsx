@@ -3,7 +3,7 @@ import { useAppContext } from '../../context/AppContext'
 import { assets } from '../../assets/assets'
 
 const Dashboard = () => {
-  const { currency, axios } = useAppContext()
+  const { formatCurrency } = useAppContext()
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalProducts: 0,
@@ -48,7 +48,7 @@ const Dashboard = () => {
     },
     {
       title: 'Tổng doanh thu',
-      value: `${stats.totalRevenue.toLocaleString()}${currency}`,
+      value: formatCurrency(stats.totalRevenue),
       icon: '💰',
       color: 'bg-yellow-500',
       bgColor: 'bg-yellow-50'

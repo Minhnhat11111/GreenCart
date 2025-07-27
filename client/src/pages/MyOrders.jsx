@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 
   const MyOrders = () => {
       const [myOrder, setMyOrders] = useState([])
-      const {currency,axios,user} = useAppContext();
+      const {currency,axios,user, formatCurrency} = useAppContext();
       const fetchMyOrders = async () => {
           try {
             const { data } = await axios.get('/api/orders/user')
@@ -59,10 +59,10 @@ import React, { useEffect, useState } from 'react'
         </div>
       ))}
     </div>
-    {/* Tổng tiền - chỉ hiển thị 1 lần, nổi bật */}
+    {/* Tổng tiền*/}
     <div className="flex justify-end mt-4">
       <div className="bg-primary/10 px-6 py-3 rounded-lg">
-        <span className="text-lg font-bold text-primary">Tổng tiền: {order.amount} {currency}</span>
+        <span className="text-lg font-bold text-primary">Tổng tiền: {formatCurrency(order.amount)}</span>
       </div>
     </div>
   </div>
