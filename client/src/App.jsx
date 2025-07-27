@@ -3,6 +3,7 @@ import Navbar from './components/Navbar.jsx'
 import { Route,Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import Login from './components/Login.jsx'
+import Contact from './pages/Contact';
 import { Toaster } from 'react-hot-toast'
 import Footer from './components/Footer.jsx'
 import { useAppContext } from './context/AppContext.jsx'
@@ -40,6 +41,8 @@ const App = () => {
             <Route path='/products' element={<AllProducts />} />
             <Route path='/product/:category' element={<ProductCategory/>} />
             <Route path='/products/:category/:id' element={<ProductDetails />} />
+
+            <Route path="/contact" element={<Contact />} />
             <Route path='/cart' element={<Cart />} />
             <Route path='/add-address' element={<AddAddress />} />
             <Route path='/my-orders' element={<MyOrders />} />

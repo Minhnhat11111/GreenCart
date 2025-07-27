@@ -20,7 +20,7 @@ import box_icon from "./box_icon.svg";
 import trust_icon from "./trust_icon.svg";
 import black_arrow_icon from "./black_arrow_icon.svg";
 import white_arrow_icon from "./white_arrow_icon.svg";
-import main_banner_bg from "./main_banner_bg.png";
+import main_banner_bg from "./mainbn.png";
 import main_banner_bg_sm from "./main_banner_bg_sm.png";
 import bottom_banner_image from "./bottom_banner_image.png";
 import bottom_banner_image_sm from "./bottom_banner_image_sm.png";
@@ -102,43 +102,43 @@ export const assets = {
 
 export const categories = [
   {
-    text: "Organic veggies",
+    text: "Rau củ",
     path: "Vegetables",
     image: organic_vegitable_image,
     bgColor: "#FEF6DA",
   },
   {
-    text: "Fresh Fruits",
+    text: "Trái cây",
     path: "Fruits",
     image: fresh_fruits_image,
     bgColor: "#FEE0E0",
   },
   {
-    text: "Cold Drinks",
+    text: "Giải khát",
     path: "Drinks",
     image: bottles_image,
     bgColor: "#F0F5DE",
   },
   {
-    text: "Instant Food",
+    text: "Thức ăn nhanh",
     path: "Instant",
     image: maggi_image,
     bgColor: "#E1F5EC",
   },
   {
-    text: "Dairy Products",
+    text: "Chế phẩm sữa",
     path: "Dairy",
     image: dairy_product_image,
     bgColor: "#FEE6CD",
   },
   {
-    text: "Bakery & Breads",
+    text: "Bánh",
     path: "Bakery",
     image: bakery_image,
     bgColor: "#E0F6FE",
   },
   {
-    text: "Grains & Cereals",
+    text: "Hạt",
     path: "Grains",
     image: grain_image,
     bgColor: "#F1E3F9",
@@ -147,27 +147,27 @@ export const categories = [
 
 export const footerLinks = [
   {
-    title: "Quick Links",
+    title: "Truy cập",
     links: [
-      { text: "Home", url: "#" },
-      { text: "Best Sellers", url: "#" },
-      { text: "Offers & Deals", url: "#" },
-      { text: "Contact Us", url: "#" },
-      { text: "FAQs", url: "#" },
+      { text: "Trang chủ", url: "#" },
+      { text: "Bán chạy", url: "#" },
+      { text: "Ưu đãi", url: "#" },
+      { text: "Liên hệ", url: "#" },
+      { text: "FAQ", url: "#" },
     ],
   },
   {
-    title: "Need help?",
+    title: "Cần hỗ trợ?",
     links: [
-      { text: "Delivery Information", url: "#" },
-      { text: "Return & Refund Policy", url: "#" },
-      { text: "Payment Methods", url: "#" },
-      { text: "Track your Order", url: "#" },
-      { text: "Contact Us", url: "#" },
+      { text: "Vận chuyển", url: "#" },
+      { text: "Chính sách đổi trả", url: "#" },
+      { text: "Thanh toán", url: "#" },
+      { text: "Đơn hàng", url: "#" },
+      { text: "Liên hệ", url: "#" },
     ],
   },
   {
-    title: "Follow Us",
+    title: "Theo dõi chúng tôi",
     links: [
       { text: "Instagram", url: "#" },
       { text: "Twitter", url: "#" },
@@ -180,23 +180,23 @@ export const footerLinks = [
 export const  features = [
   {
     icon: delivery_truck_icon,
-    title: "Fastest Delivery",
-    description: "Groceries delivered in under 30 minutes.",
+    title: "Giao hỏa tốc",
+    description: "Giao nhanh trong vòng 30 phút.",
   },
   {
     icon: leaf_icon,
-    title: "Freshness Guaranteed",
-    description: "Fresh produce straight from the source.",
+    title: "Cam kết tươi sạch",
+    description: "Sản phẩm tươi sạch được nhập tại vườn.",
   },
   {
     icon: coin_icon,
-    title: "Affordable Prices",
-    description: "Quality groceries at unbeatable prices.",
+    title: "Giá cả hợp lý",
+    description: "Giả cả hợp lý nhất nước.",
   },
   {
     icon: trust_icon,
-    title: "Trusted by Thousands",
-    description: "Loved by 10,000+ happy customers.",
+    title: "Được tín nhiệm cao",
+    description: "Được yêu thích bởi hàng triệu khách hàng.",
   },
 ];
 

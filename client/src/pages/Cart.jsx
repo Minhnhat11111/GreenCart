@@ -286,7 +286,7 @@ const Cart = () => {
                         <div className="flex items-center justify-between bg-green-50 p-3 rounded border">
                             <div>
                                 <p className="font-medium text-green-800 text-sm">Mã: {appliedCoupon.code}</p>
-                                <p className="text-xs text-green-600">Giảm {appliedCoupon.discount}% (-{currency}{discount})</p>
+                                <p className="text-xs text-green-600">Giảm {appliedCoupon.discount}% (- {discount}{currency})</p>
                             </div>
                             <button
                                 onClick={removeCoupon}
@@ -302,7 +302,7 @@ const Cart = () => {
 
                 <div className="text-gray-500 mt-4 space-y-2">
                     <p className="flex justify-between">
-                        <span>Giá</span><span>{currency}{getCartAmount()}</span>
+                        <span>Giá</span><span>{getCartAmount()}{currency}</span>
                     </p>
                     <p className="flex justify-between">
                         <span>Phí giao hàng</span><span className="text-green-600">Miễn phí</span>
@@ -314,11 +314,11 @@ const Cart = () => {
 
                     {appliedCoupon && (
                         <p className="flex justify-between text-green-600">
-                            <span>Giảm giá ({appliedCoupon.code})</span><span>-{currency}{discount}</span>
+                            <span>Giảm giá ({appliedCoupon.code})</span><span>-{discount}{currency}</span>
                         </p>
                     )}
                     <p className="flex justify-between text-lg font-medium mt-3">
-                        <span>Tổng tiền :</span><span>{currency}{getCartAmount()  - discount}</span>
+                        <span>Tổng tiền :</span><span>{getCartAmount()  - discount} {currency}</span>
                     </p>
                 </div>
 

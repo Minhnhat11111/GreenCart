@@ -13,8 +13,8 @@ const ProductCard = ({product}) => {
                 <img className="group-hover:scale-105 transition w-full h-full object-contain" src={product.image[0]} alt={product.name} />
             </div>
             <div className="text-gray-500/60 text-sm">
-                <p>{product.category}</p>
-                <p className="text-gray-700 font-medium text-lg truncate w-full">{product.name}</p>
+               
+                <p className="mt-2 text-gray-700 font-medium text-lg truncate w-full">{product.name}</p>
                 <div className="flex items-center gap-0.5">
                     {Array(5).fill('').map((_, i) => (
                         <img 
@@ -28,7 +28,13 @@ const ProductCard = ({product}) => {
                 </div>
                 <div className="flex items-end justify-between mt-3">
                     <p className="md:text-xl text-base font-medium text-primary">
-                        {currency}{product.offerPrice}{""} <span className="text-gray-500/60 md:text-sm text-xs line-through">{currency}{product.price}</span>
+
+                        <span className="text-gray-500/60 md:text-sm text-xs line-through"> {product.price}{currency}</span>
+
+                         <br/>
+                        {product.offerPrice}{currency}{""} 
+                       
+                                               
                     </p>
                     <div onClick={(e) => { e.stopPropagation(); }} className="text-primary">
                         {!cartItems[product._id] ? (
