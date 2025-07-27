@@ -63,6 +63,23 @@ const ProductList = () => {
         }
     };
 
+    const toggleProductVisibility = async (id, currentStatus) => {
+        try {
+            const { data } = await axios.post('/api/product/stock', {
+                id,
+                inStock: !currentStatus
+            });
+            if (data.success) {
+                fetchProducts();
+                toast.success(data.message);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+
     return (
         <div className="no-scrollbar flex-1 h-[95vh] overflow-y-scroll flex flex-col justify-between">
             <div className="w-full md:p-10 p-4">
@@ -71,10 +88,11 @@ const ProductList = () => {
                     <table className="w-full overflow-hidden">
                         <thead className="text-gray-900 text-sm text-left bg-gray-50">
                             <tr>
-                                <th className="px-4 py-3 font-semibold w-1/3">Sản phẩm</th>
+                                <th className="px-4 py-3 font-semibold w-1/4">Sản phẩm</th>
                                 <th className="px-4 py-3 font-semibold w-1/6">Danh mục</th>
                                 <th className="px-4 py-3 font-semibold w-1/6">Giá gốc</th>
                                 <th className="px-4 py-3 font-semibold w-1/6">Giá bán</th>
+                                <th className="px-4 py-3 font-semibold w-1/12 text-center">Trạng thái</th>
                                 <th className="px-4 py-3 font-semibold w-1/6 text-center">Thao tác</th>
                             </tr>
                         </thead>
@@ -137,6 +155,20 @@ const ProductList = () => {
                                         ) : (
                                             `${currency}${product.offerPrice}`
                                         )}
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <div className="flex justify-center">
+                                            <button
+                                                onClick={() => toggleProductVisibility(product._id, product.inStock)}
+                                                className={`px-3 py-1 rounded-full text-xs font-medium transition ${
+                                                    product.inStock 
+                                                        ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                                                        : 'bg-red-100 text-red-800 hover:bg-red-200'
+                                                }`}
+                                            >
+                                                {product.inStock ? 'Hiển thị' : 'Ẩn'}
+                                            </button>
+                                        </div>
                                     </td>
                                     <td className="px-4 py-3">
                                         <div className="flex justify-center space-x-2">

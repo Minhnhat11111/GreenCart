@@ -24,6 +24,7 @@ import CreateCoupon from './pages/seller/CreateCoupon.jsx'
 import CouponList from './pages/seller/CouponList.jsx'
 import { SettingsProvider } from './context/SettingsContext.jsx'
 import Settings from './pages/Settings.jsx'
+import Dashboard from './pages/seller/Dashboard.jsx'
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes("seller");
@@ -50,7 +51,8 @@ const App = () => {
             <Route path='/profile' element={<Profile />} />
             <Route path='/settings' element={<Settings />} />
             <Route path='/seller' element={isSeller ? < SellerLayout /> : <SellerLogin />}>
-              <Route index element={isSeller ? <AddProduct /> : null} />
+              <Route index element={isSeller ? <Dashboard /> : null} />
+              <Route path='add-product' element={<AddProduct />} />
               <Route path='product-list' element={<ProductList />} />
               <Route path='orders' element={<Orders/>} />
               <Route path='create-coupon' element={<CreateCoupon />} />
