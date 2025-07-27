@@ -18,7 +18,7 @@ export const placeOrderCOD = async (req, res) => {
             const product = await Product.findById(item.product);
             return (await acc) + product.offerPrice * item.quantity;
         }, 0)
-        amount += Math.floor(amount * 0.02);
+      //  amount += Math.floor(amount * 0.02);
         
         // Trừ discount nếu có
         if (discount && discount > 0) {
@@ -79,7 +79,7 @@ export const placeOrderStripe = async (req, res) => {
         }
 
         // Cộng thêm phí xử lý 2%
-        amount += Math.floor(amount * 0.02);
+    //    amount += Math.floor(amount * 0.02);
         
         // Trừ discount nếu có
         if (discount && discount > 0) {
@@ -104,7 +104,7 @@ export const placeOrderStripe = async (req, res) => {
                 product_data: {
                     name: item.name,
                 },
-                unit_amount: Math.round(item.price * 1.02 * 100), // cộng 2% phí xử lý
+               unit_amount: Math.round(item.price  * 100), // cộng 2% phí xử lý
             },
             quantity: item.quantity,
         }));
